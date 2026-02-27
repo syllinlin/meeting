@@ -1,1 +1,258 @@
-# meeting
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Footprints - Journey Together</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 80vh;
+            min-height: 600px;
+            background: #f0f0f0;
+        }
+
+        .map-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .map-error {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .map-error.show {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -45%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        .map-error h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .map-error p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .map-error ol {
+            text-align: left;
+            color: #666;
+            line-height: 1.8;
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .map-error li {
+            margin-bottom: 8px;
+        }
+
+        .map-error a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .map-error a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .heart {
+            color: #e91e63;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .header p {
+                font-size: 1em;
+            }
+
+            .map-container {
+                height: 70vh;
+                min-height: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Our Footprints <span class="heart">❤️</span></h1>
+            <!-- <p>Every path we've walked together is the most beautiful scenery</p> -->
+        </div>
+        <div class="map-container">
+            <iframe 
+                id="mapFrame"
+                class="map-iframe"
+                src="https://www.google.com/maps/d/embed?mid=1LUlaWSUHRk2Q5ZpKm6CipHDTpGYEtww&ehbc=2E312F"
+                allowfullscreen>
+            </iframe>
+            <div id="mapError" class="map-error">
+                <h3>🗺️ Map Access Required</h3>
+                <p>The map is currently set to private. To make it accessible to everyone, please follow these steps:</p>
+                <ol>
+                    <li>Open your <a href="https://www.google.com/maps/d/edit?mid=1LUlaWSUHRk2Q5ZpKm6CipHDTpGYEtww&usp=sharing" target="_blank">Google My Map</a></li>
+                    <li>Click the <strong>"Share"</strong> button (top right)</li>
+                    <li>Change the access level to <strong>"Public on the web"</strong> or <strong>"Anyone with the link"</strong></li>
+                    <li>Click <strong>"Done"</strong> and refresh this page</li>
+                </ol>
+                <p style="margin-top: 15px; font-size: 0.9em; color: #999;">
+                    Once the map is set to public, it will be visible to all visitors.
+                </p>
+            </div>
+        </div>
+        <div class="footer">
+            <!-- <p>Recording every beautiful moment with love 💕</p> -->
+        </div>
+    </div>
+    <script>
+        // Show instructions for making map public
+        // Since we can't reliably detect iframe content due to cross-origin restrictions,
+        // we'll show a helpful message that users can dismiss if the map is working
+        const mapError = document.getElementById('mapError');
+        const mapFrame = document.getElementById('mapFrame');
+        
+        // Check if user has previously dismissed the message
+        const messageDismissed = localStorage.getItem('mapInstructionsDismissed');
+        
+        // Show message by default (user can dismiss it if map is working)
+        // Or show after a delay if map seems to not be loading
+        if (!messageDismissed) {
+            setTimeout(() => {
+                // Show message after 2 seconds if not dismissed
+                // User can close it if map is working fine
+                mapError.classList.add('show');
+            }, 2000);
+        }
+        
+        // Add close button functionality
+        const closeBtn = document.createElement('button');
+        closeBtn.textContent = '✕';
+        closeBtn.style.cssText = `
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #f0f0f0;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        `;
+        closeBtn.onmouseover = () => closeBtn.style.background = '#e0e0e0';
+        closeBtn.onmouseout = () => closeBtn.style.background = '#f0f0f0';
+        closeBtn.onclick = () => {
+            mapError.classList.remove('show');
+            localStorage.setItem('mapInstructionsDismissed', 'true');
+        };
+        mapError.style.position = 'relative';
+        mapError.appendChild(closeBtn);
+        
+        // Also try to detect if map iframe shows "Sign in" or similar
+        // This is a best-effort detection
+        mapFrame.addEventListener('load', () => {
+            // Due to cross-origin restrictions, we can't reliably check iframe content
+            // But we can at least ensure the iframe loaded
+            console.log('Map iframe loaded');
+        });
+    </script>
+</body>
+</html>
